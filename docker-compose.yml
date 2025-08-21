@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./.docker/Dockerfile.dev
+    container_name: financial_wallet_app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./php.ini:/usr/local/etc/php/conf.d/custom.ini
+    depends_on:
+      - postgres
+    networks:
+      - financial-wallet-network
+    expose:
+      - 9000
+
+  nginx:
+    image: nginx:alpine
+    container_name: financial_wallet_webserver
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./.docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - financial-wallet-network
+
+  postgres:
+    image: postgres:15
+    container_name: financial_wallet_postgres
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-financial_wallet}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - financial-wallet-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  financial-wallet-network:
+    driver: bridge

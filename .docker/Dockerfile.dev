@@ -1,0 +1,35 @@
+FROM php:8.4-fpm-alpine
+
+RUN apk update && apk add --no-cache \
+    git \
+    curl \
+    libpng-dev \
+    libwebp-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    postgresql-dev
+
+RUN apk add --no-cache nodejs npm
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install pdo pdo_pgsql pgsql zip bcmath opcache
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+RUN addgroup -g 1000 www && adduser -u 1000 -G www -s /bin/sh -D www
+
+COPY ./.docker/php.ini /usr/local/etc/php/conf.d/custom.ini
+
+RUN chown -R www:www /var/www
+
+USER www
+
+WORKDIR /var/www/html
+
+EXPOSE 9000
+
+CMD ["php-fpm"]
