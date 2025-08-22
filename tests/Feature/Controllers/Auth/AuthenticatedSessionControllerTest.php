@@ -1,15 +1,12 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\Controllers\Auth;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AuthenticatedSessionControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_login_screen_can_be_rendered(): void
     {
         $this->get('/login')->assertStatus(200);

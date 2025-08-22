@@ -1,14 +1,11 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\Controllers\Auth;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class RegisteredUserControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_registration_screen_can_be_rendered(): void
     {
         $response = $this->get('/register');
