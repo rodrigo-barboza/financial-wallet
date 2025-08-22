@@ -6,10 +6,17 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+
+    title: {
+        type: String,
+        default: '',
+    },
+
     maxWidth: {
         type: String,
         default: '2xl',
     },
+
     closeable: {
         type: Boolean,
         default: true,
@@ -48,10 +55,7 @@ const close = () => {
 const closeOnEscape = (e) => {
     if (e.key === 'Escape') {
         e.preventDefault();
-
-        if (props.show) {
-            close();
-        }
+        close();
     }
 };
 
@@ -70,13 +74,15 @@ const maxWidthClass = computed(() => {
         lg: 'sm:max-w-lg',
         xl: 'sm:max-w-xl',
         '2xl': 'sm:max-w-2xl',
+        '3xl': 'sm:max-w-3xl',
+        '4xl': 'sm:max-w-4xl',
     }[props.maxWidth];
 });
 </script>
 
 <template>
     <dialog
-        class="z-50 m-0 min-h-full min-w-full overflow-y-auto bg-transparent backdrop:bg-transparent"
+        class="z-50 m-0 min-h-full min-w-full overflow-y-auto bg-transparent"
         ref="dialog"
     >
         <div
@@ -97,11 +103,10 @@ const maxWidthClass = computed(() => {
                     @click="close"
                 >
                     <div
-                        class="absolute inset-0 bg-gray-500 opacity-75"
+                        class="absolute inset-0 bg-black/20"
                     />
                 </div>
             </Transition>
-
             <Transition
                 enter-active-class="ease-out duration-300"
                 enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -112,9 +117,29 @@ const maxWidthClass = computed(() => {
             >
                 <div
                     v-show="show"
-                    class="mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full"
+                    class="mt-10 mb-6 p-6 text-[#1E1E1E] transform overflow-hidden rounded-lg bg-white transition-all sm:mx-auto sm:w-full"
                     :class="maxWidthClass"
                 >
+                    <div class="mb-4 flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            {{ title }}
+                        </h3>
+                        <button
+                            class="absolute right-2.5 top-2.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
+                            @click="close"
+                        >
+                            <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                                />
+                            </svg>
+                            <span class="sr-only">Close menu</span>
+                        </button>
+                    </div>
                     <slot v-if="showSlot" />
                 </div>
             </Transition>

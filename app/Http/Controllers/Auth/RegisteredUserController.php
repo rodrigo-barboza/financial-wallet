@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Requests\Auth\StoreUserRequest;
@@ -18,7 +20,12 @@ final class RegisteredUserController
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        $user = User::create($request->validated());
+        $user = User::create([
+            ...$request->validated(),
+            'password' => bcrypt($request->password),
+            'account' => (string) rand(1000000, 99999999),
+            'agency' => (string) rand(1000, 9999),
+        ]);
 
         Auth::login($user);
 

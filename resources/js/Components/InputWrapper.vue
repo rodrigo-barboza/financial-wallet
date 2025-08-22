@@ -38,6 +38,7 @@ defineProps({
         <InputLabel :value="label"/>
         <TextInput
             v-model="model"
+            v-bind="$attrs"
             class="mt-1 block w-full"
             :type="type"
             :required="required"

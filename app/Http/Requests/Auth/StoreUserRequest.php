@@ -16,9 +16,4 @@ class StoreUserRequest extends FormRequest
             'password' => ['required', 'confirmed', Password::defaults()],
         ];
     }
-
-    protected function passedValidation(): void
-    {
-        $this->replace(['password' => bcrypt($this->password)]);
-    }
 }
