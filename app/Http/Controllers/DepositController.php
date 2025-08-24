@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 
 final class DepositController
 {
-    public function store(StoreDepositRequest $request): Response
+    public function __invoke(StoreDepositRequest $request): Response
     {
         $request->user()->deposit($request->amount);
 

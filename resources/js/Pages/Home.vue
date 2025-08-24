@@ -5,6 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import HomeDepositModal from '@/Components/Home/DepositModal.vue';
 import HomeHeader from '@/Components/Home/Header.vue';
 import HomeTransactionsTimeline from '@/Components/Home/TransactionsTimeline.vue';
+import HomeTransferModal from '@/Components/Home/TransferModal.vue';
 
 const showDepositModal = ref(false);
 const showTransferModal = ref(false);
@@ -22,6 +23,7 @@ const showTransferModal = ref(false);
                             @on-deposit="showDepositModal = true"
                         />
                         <HomeTransactionsTimeline class="mt-6" />
+                        <HomeTransferModal v-model="showTransferModal" />
                         <HomeDepositModal v-model="showDepositModal" />
                     </div>
                 </div>

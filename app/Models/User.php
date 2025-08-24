@@ -45,7 +45,7 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn (int $value) => $value / 100,
-            set: fn (int $value) => $value * 100,
+            set: fn (float $value) => $value * 100,
         );
     }
 
@@ -60,5 +60,15 @@ class User extends Authenticatable
     {
         $this->balance += $amount;
         $this->save();
+    }
+
+    public function haveEnoughBalance(float $amount): bool
+    {
+        return $this->balance >= $amount;
+    }
+
+    public function canTransferTo(User $receiver): bool
+    {
+        return $this->id !== $receiver->id;
     }
 }
