@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\TransactionTypes;
 use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Support\Str;
@@ -22,6 +23,7 @@ class TransferControllerTest extends TestCase
 
         $this->actingAs($sender)
             ->post(route('transfer'), [
+                'type' => TransactionTypes::TED->value,
                 'account' => Str::replace('-', '', $receiver->account),
                 'agency' => $receiver->agency,
                 'amount' => 500.0,

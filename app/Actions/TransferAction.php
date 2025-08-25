@@ -4,49 +4,21 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Enums\TransactionTypes;
-use App\Events\TransactionCompleted;
-use App\Exceptions\IncorrectReceiveAccountException;
-use App\Exceptions\InsufficientBalanceException;
-use App\Exceptions\TransferNotAllowedException;
-use App\Models\Transaction;
-use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Strategies\TED;
 
 final class TransferAction
 {
     public function handle(int $senderId, array $transfer): void
     {
-        DB::transaction(function () use ($senderId, $transfer): void {
-            ['account' => $account, 'agency' => $agency, 'amount' => $amount] = $transfer;
+        $transaction = match($transfer['type']) {
+            'ted' => app(TED::class),
+            default => null,
+        };
 
-            $sender = User::query()->lockForUpdate()->findOrFail($senderId);
+        if (! $transaction) {
+            throw new \InvalidArgumentException('Invalid transaction type');
+        }
 
-            throw_if(! $sender->haveEnoughBalance($amount), InsufficientBalanceException::class);
-
-            $receiver = User::query()
-                ->whereAccount($account)
-                ->whereAgency($agency)
-                ->lockForUpdate()
-                ->first();
-
-            throw_if(! $receiver, IncorrectReceiveAccountException::class);
-
-            throw_if(! $sender->canTransferTo($receiver), TransferNotAllowedException::class);
-
-            $sender->deposit(-$amount);
-            $receiver->deposit($amount);
-
-            $transaction = Transaction::create([
-                'type' => TransactionTypes::TRANSFER,
-                'sender_id' => $sender->id,
-                'receiver_id' => $receiver->id,
-                'amount' => $amount,
-                'user_agent' => request()->userAgent(),
-                'ip' => request()->ip(),
-            ]);
-
-            TransactionCompleted::dispatch($transaction);
-        });
+        $transaction->handle($senderId, $transfer);
     }
 }

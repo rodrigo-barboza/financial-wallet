@@ -20,6 +20,7 @@ const form = useForm({
     account: null,
     agency: null,
     amount: null,
+    type: 'ted',
 });
 
 const unformattedAmount = ref(null);

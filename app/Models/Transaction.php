@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\TransactionTypes;
+use App\Enums\OperationTypes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,7 +21,7 @@ class Transaction extends Model
     protected function casts(): array
     {
         return [
-            'type' => TransactionTypes::class,
+            'type' => OperationTypes::class,
         ];
     }
 

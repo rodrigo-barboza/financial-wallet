@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers;
 
 use App\Actions\DepositAction;
-use App\Enums\TransactionTypes;
+use App\Enums\OperationTypes;
 use App\Events\TransactionCompleted;
 use App\Models\Transaction;
 use App\Models\User;
@@ -31,7 +31,7 @@ class DepositActionTest extends TestCase
         ]);
 
         $this->assertDatabaseHas(Transaction::class, [
-            'type' => TransactionTypes::DEPOSIT->value,
+            'type' => OperationTypes::DEPOSIT->value,
             'sender_id' => $user->id,
             'receiver_id' => $user->id,
             'amount' => 50000,

@@ -16,7 +16,6 @@ onMounted(async () => {
     const { data } = await axios.get(route('transactions'));
     transactions.value = data;
 });
-
 </script>
 
 <template>

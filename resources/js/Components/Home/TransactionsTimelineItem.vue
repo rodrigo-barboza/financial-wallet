@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { TRANSACTION_TYPES, DEPOSIT } from '@/Constants/TransactionTypes';
+import { TRANSACTION_TYPES, DEPOSIT } from '@/Constants/OperationTypes';
 import useCurrency from '@/Composables/useCurrency';
 
 const { toCurrency } = useCurrency();

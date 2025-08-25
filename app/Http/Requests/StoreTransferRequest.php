@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TransactionTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTransferRequest extends FormRequest
 {
@@ -12,6 +14,7 @@ class StoreTransferRequest extends FormRequest
             'amount' => ['required', 'numeric', 'min:1'],
             'account' => ['required', 'exists:users,account'],
             'agency' => ['required', 'exists:users,agency'],
+            'type' => ['required', Rule::enum(TransactionTypes::class)],
         ];
     }
 

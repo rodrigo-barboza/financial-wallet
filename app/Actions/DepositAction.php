@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Enums\TransactionTypes;
+use App\Enums\OperationTypes;
 use App\Events\TransactionCompleted;
 use App\Models\Transaction;
 use App\Models\User;
@@ -20,7 +20,7 @@ final class DepositAction
             $user->deposit($deposit['amount']);
 
             $transaction = Transaction::create([
-                'type' => TransactionTypes::DEPOSIT,
+                'type' => OperationTypes::DEPOSIT,
                 'amount' => $deposit['amount'],
                 'sender_id' => $userId,
                 'receiver_id' => $userId,

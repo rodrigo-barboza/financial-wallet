@@ -13,7 +13,6 @@ final class DepositController
     public function __invoke(StoreDepositRequest $request, DepositAction $action): Response
     {
         $action->handle($request->user()->id, $request->validated());
-        // $request->user()->deposit($request->amount);
 
         return response(['message' => 'Deposito realizado com sucesso'], Response::HTTP_CREATED);
     }
