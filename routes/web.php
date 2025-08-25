@@ -17,7 +17,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/deposit', DepositController::class)->name('deposit');
     Route::post('/transfer', TransferController::class)->name('transfer');
-
     Route::get('/transactions', ListTransactionsController::class)->name('transactions');
 });
 
