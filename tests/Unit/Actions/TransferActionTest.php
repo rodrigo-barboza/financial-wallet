@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\Controllers;
 
 use App\Actions\TransferAction;
+use App\Enums\TransactionTypes;
 use App\Events\TransactionCompleted;
 use App\Exceptions\IncorrectReceiveAccountException;
 use App\Exceptions\InsufficientBalanceException;
@@ -44,6 +47,7 @@ class TransferActionTest extends TestCase
         ]);
 
         $this->assertDatabaseHas(Transaction::class, [
+            'type' => TransactionTypes::TRANSFER->value,
             'sender_id' => $sender->id,
             'receiver_id' => $receiver->id,
             'amount' => 50000,
@@ -81,6 +85,7 @@ class TransferActionTest extends TestCase
         ]);
 
         $this->assertDatabaseMissing(Transaction::class, [
+            'type' => TransactionTypes::TRANSFER->value,
             'sender_id' => $sender->id,
             'receiver_id' => $receiver->id,
             'amount' => 50000,
@@ -139,6 +144,7 @@ class TransferActionTest extends TestCase
         ]);
 
         $this->assertDatabaseMissing(Transaction::class, [
+            'type' => TransactionTypes::TRANSFER->value,
             'sender_id' => $sender->id,
             'receiver_id' => $sender->id,
             'amount' => 50000,

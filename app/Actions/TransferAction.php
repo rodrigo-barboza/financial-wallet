@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\Enums\TransactionTypes;
 use App\Events\TransactionCompleted;
 use App\Exceptions\IncorrectReceiveAccountException;
 use App\Exceptions\InsufficientBalanceException;
@@ -37,6 +38,7 @@ final class TransferAction
             $receiver->deposit($amount);
 
             $transaction = Transaction::create([
+                'type' => TransactionTypes::TRANSFER,
                 'sender_id' => $sender->id,
                 'receiver_id' => $receiver->id,
                 'amount' => $amount,

@@ -1,14 +1,22 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import HomeDepositModal from '@/Components/Home/DepositModal.vue';
 import HomeHeader from '@/Components/Home/Header.vue';
 import HomeTransactionsTimeline from '@/Components/Home/TransactionsTimeline.vue';
 import HomeTransferModal from '@/Components/Home/TransferModal.vue';
+import axios from 'axios';
 
 const showDepositModal = ref(false);
 const showTransferModal = ref(false);
+const transactions = ref([]);
+
+onMounted(async () => {
+    const { data } = await axios.get(route('transactions'));
+    transactions.value = data;
+});
+
 </script>
 
 <template>
@@ -22,7 +30,10 @@ const showTransferModal = ref(false);
                             @on-transfer="showTransferModal = true"
                             @on-deposit="showDepositModal = true"
                         />
-                        <HomeTransactionsTimeline class="mt-6" />
+                        <HomeTransactionsTimeline
+                            class="mt-6"
+                            :transactions="transactions?.data"
+                        />
                         <HomeTransferModal v-model="showTransferModal" />
                         <HomeDepositModal v-model="showDepositModal" />
                     </div>

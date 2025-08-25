@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TransactionTypes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,10 +12,18 @@ class Transaction extends Model
     protected $fillable = [
         'sender_id',
         'receiver_id',
+        'type',
         'amount',
         'user_agent',
         'ip',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'type' => TransactionTypes::class,
+        ];
+    }
 
     public function sender(): BelongsTo
     {
