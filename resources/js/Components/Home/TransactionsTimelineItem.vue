@@ -1,9 +1,14 @@
 <script setup>
 import { computed } from 'vue';
 import { TRANSACTION_TYPES, DEPOSIT } from '@/Constants/OperationTypes';
+import { usePage } from '@inertiajs/vue3';
 import useCurrency from '@/Composables/useCurrency';
 
+const emit = defineEmits(['on-revert']);
+
 const { toCurrency } = useCurrency();
+
+const { props: page } = usePage();
 
 const props = defineProps({
     type: {
@@ -19,6 +24,10 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    sender: {
+        type: Object,
+        default: () => ({}),
+    },
     date: {
         type: String,
         default: null,
@@ -30,12 +39,20 @@ const resolveTimelineLabel = computed(() => {
         return 'Depósito realizado';
    }
 
+   if (isReceiver.value) {
+        return 'Transferência recebida';
+   }
+
    return 'Transferência realizada';
 });
 
 const resolveTimelineTransactionDescription = computed(() => {
     if (props.type?.value === DEPOSIT) {
         return '';
+    }
+
+    if (isReceiver.value) {
+        return `Transferência TED recebida de ${props.sender?.name} (${props.sender?.account})`;
     }
 
     return `Transferência TED realizada para o(a) ${props.receiver?.name} (${props.receiver?.account})`;
@@ -46,15 +63,21 @@ const resolveAmount = computed(() => {
         return `+${toCurrency(props.amount)}`;
     }
 
+    if (isReceiver.value) {
+        return `+${toCurrency(props.amount)}`;
+    }
+
     return `-${toCurrency(props.amount)}`;
-})
+});
+
+const isReceiver = computed(() => props.receiver.id === page.auth.user.id);
 </script>
 
 <template>
     <li class="mt-4 ms-6 flex justify-between">
         <div>
             <span
-                v-if="props.type?.value === DEPOSIT"
+                v-if="props.type?.value === DEPOSIT || isReceiver"
                 class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -start-3 ring-8 ring-white"
             >
                 <svg class="w-5 h-5 text-green-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -73,13 +96,19 @@ const resolveAmount = computed(() => {
             <time class="block mb-2 text-sm font-normal leading-none text-gray-400">{{ date }}</time>
             <p class="text-base font-normal text-gray-500">{{ resolveTimelineTransactionDescription }}</p>
         </div>
-        <div>
+        <div class="flex flex-col gap-2">
             <span
                 class="inline-flex items-center px-2 text-sm font-semibold leading-5 text-green-800 bg-green-100 rounded-full"
-                :class="type?.badge"
+                :class="isReceiver ? 'bg-green-100 text-green-800' : type?.badge"
             >
                 {{ resolveAmount }}
             </span>
+            <small
+                class="self-center text-gray-500 cursor-pointer hover:underline"
+                @click="emit('on-revert')"
+            >
+                reverter
+            </small>
         </div>
     </li>
 </template>

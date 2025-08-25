@@ -42,4 +42,15 @@ class Transaction extends Model
             set: fn (float $value) => $value * 100,
         );
     }
+
+    public function revert(): void
+    {
+        $receiver = User::find($this->receiver_id);
+        $receiver->deposit(-$this->amount);
+
+        $sender = User::find($this->sender_id);
+        $sender->deposit($this->amount);
+
+        $this->save();
+    }
 }

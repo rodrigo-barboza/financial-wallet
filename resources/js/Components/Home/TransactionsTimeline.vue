@@ -1,5 +1,10 @@
 <script setup>
+import { router } from '@inertiajs/vue3';
+import axios from 'axios';
 import TransactionsTimelineItem from '@/Components/Home/TransactionsTimelineItem.vue';
+import useToast from '@/Composables/useToast';
+
+const toast = useToast();
 
 defineProps({
     transactions: {
@@ -7,6 +12,16 @@ defineProps({
         default: () => ([]),
     },
 });
+
+async function handleRevertTransaction(transaction) {
+    try {
+        const { data: { message } } = await axios.post(`/revert-transaction/${transaction.id}`);
+        toast.success(message);
+        router.visit(route('home'));
+    } catch (error) {
+        toast.error('Erro ao reverter transação.');
+    }
+}
 </script>
 
 <template>
@@ -22,6 +37,7 @@ defineProps({
                 v-for="(transaction, index) in transactions"
                 v-bind="transaction"
                 :key="index"
+                @on-revert="handleRevertTransaction(transaction)"
             />
         </ol>
     </div>

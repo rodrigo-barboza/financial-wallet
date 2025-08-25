@@ -15,6 +15,7 @@ class TransactionResource extends JsonResource
             'type' => $this->type->toArray(),
             'amount' => $this->amount,
             'receiver' => new UserResource($this->receiver),
+            'sender' => new UserResource($this->sender),
             'date' => Carbon::parse($this->created_at)->diffForHumans(),
         ];
     }

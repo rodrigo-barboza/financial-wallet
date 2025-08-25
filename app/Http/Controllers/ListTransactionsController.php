@@ -14,7 +14,8 @@ final class ListTransactionsController
     {
         return TransactionResource::collection(
             Transaction::where('sender_id', request()->user()->id)
-                ->with('receiver')
+                ->orWhere('receiver_id', request()->user()->id)
+                ->with(['receiver', 'sender'])
                 ->orderBy('created_at', 'desc')
                 ->get(),
         );

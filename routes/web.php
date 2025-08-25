@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\ListTransactionsController;
+use App\Http\Controllers\RevertTransactionController;
 use App\Http\Controllers\TransferController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/deposit', DepositController::class)->name('deposit');
     Route::post('/transfer', TransferController::class)->name('transfer');
     Route::get('/transactions', ListTransactionsController::class)->name('transactions');
+    Route::post('/revert-transaction/{transaction}', RevertTransactionController::class)->name('revert-transaction');
 });
 
 require __DIR__.'/auth.php';
