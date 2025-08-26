@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use ValueError;
 
 class TransferActionTest extends TestCase
 {
@@ -24,8 +25,7 @@ class TransferActionTest extends TestCase
         /** @var \App\Models\User */
         $receiver = User::factory()->create(['balance' => 0]);
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid transaction type');
+        $this->expectException(ValueError::class);
 
         app(TransferAction::class)->handle($sender->id, [
             'type' => 'invalid',

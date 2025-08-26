@@ -6,6 +6,7 @@ namespace App\Actions;
 
 use App\Enums\TransactionTypes;
 use App\Strategies\TED;
+use ValueError;
 
 final class TransferAction
 {
@@ -17,7 +18,7 @@ final class TransferAction
         };
 
         if (! $transaction) {
-            throw new \InvalidArgumentException('Invalid transaction type');
+            throw new ValueError('Invalid transaction type');
         }
 
         $transaction->handle($senderId, $transfer);

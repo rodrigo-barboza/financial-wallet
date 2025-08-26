@@ -13,6 +13,7 @@ use App\Exceptions\InsufficientBalanceException;
 use App\Exceptions\TransferNotAllowedException;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Strategies\TED;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 use Illuminate\Support\Str;
@@ -29,7 +30,7 @@ class TEDTest extends TestCase
         /** @var \App\Models\User */
         $receiver = User::factory()->create(['balance' => 0]);
 
-        app(TransferAction::class)->handle($sender->id, [
+        app(TED::class)->handle($sender->id, [
             'type' => TransactionTypes::TED->value,
             'account' => Str::replace('-', '', $receiver->account),
             'agency' => $receiver->agency,
@@ -68,7 +69,7 @@ class TEDTest extends TestCase
 
         $this->expectException(InsufficientBalanceException::class);
 
-        app(TransferAction::class)->handle($sender->id, [
+        app(TED::class)->handle($sender->id, [
             'type' => TransactionTypes::TED->value,
             'account' => Str::replace('-', '', $receiver->account),
             'agency' => $receiver->agency,
@@ -105,7 +106,7 @@ class TEDTest extends TestCase
 
         $this->expectException(TransferNotAllowedException::class);
 
-        app(TransferAction::class)->handle($sender->id, [
+        app(TED::class)->handle($sender->id, [
             'type' => TransactionTypes::TED->value,
             'account' => Str::replace('-', '', $sender->account),
             'agency' => $sender->agency,
@@ -135,7 +136,7 @@ class TEDTest extends TestCase
 
         $this->expectException(IncorrectReceiveAccountException::class);
 
-        app(TransferAction::class)->handle($sender->id, [
+        app(TED::class)->handle($sender->id, [
             'type' => TransactionTypes::TED->value,
             'account' => 0000000,
             'agency' => 0,
