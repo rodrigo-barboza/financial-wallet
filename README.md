@@ -1,7 +1,3 @@
-# 🚀 Projeto Laravel com Docker
-
-Este projeto fornece um ambiente Docker completo para desenvolvimento Laravel.
-
 ## 📋 Pré-requisitos
 
 - Docker
